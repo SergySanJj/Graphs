@@ -4,6 +4,8 @@
 
 #include <vector>
 
+#define SUCH_VERTEX_DOESNT_EXIST 1
+
 using namespace std;
 
 class Vert
@@ -19,6 +21,7 @@ class Graph
 {
 public:
 	Graph();
+	Graph(int vertexNumber);
 	~Graph();
 
 	void addVert();
