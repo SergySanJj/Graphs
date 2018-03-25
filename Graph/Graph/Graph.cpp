@@ -6,11 +6,11 @@ Graph::Graph()
 {
 }
 
-Graph::Graph(int vertexNumber)
+Graph::Graph(size_t vertexNumber)
 {
-	for (int i = 0; i < vertexNumber; i++)
+	for (size_t i = 0; i < vertexNumber; i++)
 	{
-		addVert();
+		addVert(i);
 	}
 }
 
@@ -26,31 +26,79 @@ Graph::~Graph()
 	}
 }
 
-void Graph::addVert()
+void Graph::addVert(size_t ID)
 {
-	this->_verts.push_back(nullptr);
+	Vert* tmpVert = new Vert(ID);
+	this->_verts.push_back(tmpVert);
 }
 
-void Graph::addEdge(int ID1, int ID2)
+void Graph::addEdge(size_t ID1, size_t ID2)
 {
 	if (ID1 >= this->_verts.size() || ID2 >= this->_verts.size())
 		exit(SUCH_VERTEX_DOESNT_EXIST);
 
-	// if there are no edges before adding create new vectors
-
-	if (this->_verts[ID1] == nullptr)
-	{
-		this->_verts[ID1] = new vector<int>;
-	}
-	if (this->_verts[ID2] == nullptr)
-	{
-		this->_verts[ID2] = new vector<int>;
-	}
-	vector<int>* vID1 = this->_verts[ID1];
-	vector<int>* vID2 = this->_verts[ID2];
+	Vert* vID1 = this->_verts[ID1];
+	Vert* vID2 = this->_verts[ID2];
 	// if no such edge add one
-	if (find(vID1->begin(), vID1->end(), ID2) == vID1->end())
-		vID1->push_back(ID2);
-	if (find(vID2->begin(), vID2->end(), ID1) == vID2->end())
-		vID2->push_back(ID1);
+	if (find(vID1->_edges.begin(), vID1->_edges.end(), vID2) == vID1->_edges.end())
+	{
+		vID1->_edges.push_back(vID2);
+		vID2->_edges.push_back(vID1);
+	}
+	this->_edges++;
+}
+
+void Graph::deleteEdge(Vert * v1, Vert * v2)
+{
+	auto iV1 = find(this->_verts.begin(), this->_verts.end(), v1);
+	auto iV2 = find(this->_verts.begin(), this->_verts.end(), v2);
+
+
+	this->_edges--;
+}
+
+void Graph::makeBiconnected()
+{
+
+}
+
+void Graph::smooth()
+{
+	for (auto vert = this->_verts.begin(); vert != this->_verts.end(); ++vert)
+	{
+		if ((*vert) != nullptr)
+		{
+
+		}
+	}
+}
+
+size_t Graph::size()
+{
+	return this->_verts.size();
+}
+
+bool Graph::eulersVerification()
+{
+	int nodes = countNodes();
+	int edges = countEdges();
+	return edges <= 3 * nodes - 6;
+}
+
+size_t Graph::countNodes()
+{
+	return this->_verts.size();
+}
+
+size_t Graph::countEdges()
+{
+	return this->_edges;
+}
+
+Vert::~Vert()
+{
+	for (auto edge = this->_edges.begin(); edge != this->_edges.end(); ++edge)
+	{
+		delete (*edge);
+	}
 }
